@@ -1,4 +1,4 @@
-package com.ey.asp.message.processor;
+package com.asp.message.processor;
 
 import com.asp.common.AppExecContext;
 import com.asp.common.Message;

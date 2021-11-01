@@ -1,4 +1,4 @@
-package com.ey.asp.message;
+package com.asp.message;
 
 public class KafkaMessageDetails {
 	

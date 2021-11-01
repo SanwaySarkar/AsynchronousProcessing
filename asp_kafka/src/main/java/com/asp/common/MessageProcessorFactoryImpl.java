@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.ey.asp.message.processor.TaskProcessor;
+import com.asp.message.processor.TaskProcessor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

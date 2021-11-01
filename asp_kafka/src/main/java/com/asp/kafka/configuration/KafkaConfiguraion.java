@@ -18,7 +18,7 @@ import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer2;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.asp.common.AppStartupConstants;
-import com.ey.asp.message.KafkaMessageDetails;
+import com.asp.message.KafkaMessageDetails;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
