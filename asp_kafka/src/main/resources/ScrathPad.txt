@@ -1,0 +1,172 @@
+Listener varieties 
+@KafkaListener(topics = "test", groupId = "test", containerFactory =
+	  "normalKafkaListenerFactory") public void consumeJson(ConsumerRecord<?,
+	  Computer> record) { System.out.println("Consumed  Message: " +
+	  record.value()); }
+	 
+	
+	
+	  @KafkaListener(id = "listMsg", topics = "test", containerFactory =
+	  "stringKafkaListenerFactory") public void listen1(List<ConsumerRecord<?, ?>>
+	  list) {
+	  
+	  
+	  System.out.println("on each poll msg received " + list.size()); for
+	  (ConsumerRecord<?, ?> job : list) {
+	  
+	  System.out.println("Consumed  Message: " + job); } }
+	  
+	
+	  @KafkaListener(topics = "testEmployee", groupId = "testEmployee",
+	  containerFactory = "employeeKafkaListenerFactory") public void
+	  consumeJsonEmployee(Employee emp) {
+	  System.out.println("Consumed Employee JSON Message: " + emp); }
+	 
+	 
+	
+	  @KafkaListener(id = "id0",containerFactory="normalKafkaListenerFactory",
+	  topicPartitions = { @TopicPartition(topic = "SpringKafkaTopic", partitions =
+	  { "0" }) }) public void listenPartition0(ConsumerRecord<?, Computer> record)
+	  { //System.out.println("Listener Id0, Thread ID: " +
+	  Thread.currentThread().getId());
+	  System.out.println("Received by Thread  "+Thread.currentThread().getId()
+	  +" record" + record);
+	  
+	  Computer com = (Computer) record.value();
+	  System.out.println("consumed msg "+com);
+	  
+	  
+	  }
+	  
+	  @KafkaListener(id = "id1",containerFactory="normalKafkaListenerFactory",
+	  topicPartitions = { @TopicPartition(topic = "SpringKafkaTopic", partitions =
+	  { "1" }) }) public void listenPartition1(ConsumerRecord<?, Computer> record)
+	  { //System.out.println("Listener Id1, Thread ID: " +
+	  Thread.currentThread().getId());
+	  System.out.println("Received by Thread  "+Thread.currentThread().getId()
+	  +" record" + record);
+	  
+	  Computer com = (Computer) record.value();
+	  System.out.println("consumed msg "+com);
+	  
+	  
+	  
+	  
+	  
+	  }
+	  
+	  @KafkaListener(id = "id2",containerFactory="normalKafkaListenerFactory",
+	  topicPartitions = { @TopicPartition(topic = "SpringKafkaTopic", partitions =
+	  { "2" }) }) public void listenPartition2(ConsumerRecord<?, Computer> record)
+	  { //System.out.println("Listener Id2, Thread ID: " +
+	  Thread.currentThread().getId());
+	  System.out.println("Received by Thread  "+Thread.currentThread().getId()
+	  +" record" + record);
+	  
+	  Computer com = (Computer) record.value();
+	  System.out.println("consumed msg "+com);
+	  
+	  
+	  
+	  }
+	  
+Configuration 
+
+ @Bean public ConsumerFactory<String,User> userConsumerFactory(){ Map<String,
+	  Object> configs= new HashMap<>();
+	  configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
+	  configs.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
+	  configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,StringDeserializer.
+	  class);
+	  configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,JsonDeserializer.
+	  class);
+	  
+	  return new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(),
+	  new JsonDeserializer<>(User.class));
+	  
+	  }
+	  
+	    @Bean public ConsumerFactory<String,String> stringkafkaJobDetailsConsumerFactory(){
+		  Map<String, Object> configs= new HashMap<>();
+		  configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,"localhost:9092");
+		  configs.put(ConsumerConfig.GROUP_ID_CONFIG, "testEmployee");
+		  configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,StringDeserializer.
+		  class);
+		  configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,JsonDeserializer.
+		  class);
+		  configs.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "6");
+		  
+		  return new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(),
+				  new StringDeserializer());
+		  
+		  }
+		  
+	@Bean
+		public ConcurrentKafkaListenerContainerFactory<String, String> stringKafkaListenerFactory() {
+			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+			factory.setConsumerFactory(stringkafkaJobDetailsConsumerFactory());
+			//factory.setConcurrency(3);
+			factory.getContainerProperties().setPollTimeout(0);
+			//factory.getContainerProperties().setKafkaConsumerProperties(prop);
+			factory.setBatchListener(true);
+			
+			return factory;
+		}
+		
+		/*
+	 * @Bean public ConsumerFactory<String, String> normalConsumerFactory() {
+	 * Map<String, Object> configs = new HashMap<>();
+	 * configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+	 * configs.put(ConsumerConfig.GROUP_ID_CONFIG, "normal");
+	 * configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+	 * StringDeserializer.class);
+	 * configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+	 * StringDeserializer.class); //configs.put("max.poll.records", "5");
+	 * configs.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "6");
+	 * //configs.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "2"); return new
+	 * DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(), new
+	 * StringDeserializer());
+	 * 
+	 * }
+	 */
+	 
+	 
+		/*
+		 * @Bean public ConsumerFactory<String, Computer> normalConsumerFactory() {
+		 * Map<String, Object> configs = new HashMap<>();
+		 * configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		 * configs.put(ConsumerConfig.GROUP_ID_CONFIG, "normal");
+		 * configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+		 * StringDeserializer.class);
+		 * configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+		 * JsonDeserializer.class);
+		 * 
+		 * return new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(),
+		 * new JsonDeserializer<>(Computer.class));
+		 * 
+		 * }
+		 */
+	 
+	/*
+	 * @Bean public ConcurrentKafkaListenerContainerFactory<String, User>
+	 * userKafkaListenerFactory() { ConcurrentKafkaListenerContainerFactory<String,
+	 * User> factory = new ConcurrentKafkaListenerContainerFactory<>();
+	 * factory.setConsumerFactory(userConsumerFactory()); return factory; }
+	 */
+	/*
+	 * @Bean public ConcurrentKafkaListenerContainerFactory<String, Employee>
+	 * employeeKafkaListenerFactory() {
+	 * ConcurrentKafkaListenerContainerFactory<String, Employee> factory = new
+	 * ConcurrentKafkaListenerContainerFactory<>();
+	 * factory.setConsumerFactory(employeeConsumerFactory()); return factory; }
+	 */
+	
+	/*
+	 * @Bean public ConcurrentKafkaListenerContainerFactory<String, Computer>
+	 * normalKafkaListenerFactory() {
+	 * ConcurrentKafkaListenerContainerFactory<String, Computer> factory = new
+	 * ConcurrentKafkaListenerContainerFactory<>();
+	 * factory.setConsumerFactory(normalConsumerFactory());
+	 * factory.setConcurrency(3);
+	 * factory.getContainerProperties().setPollTimeout(15000); return factory; }
+	 */
