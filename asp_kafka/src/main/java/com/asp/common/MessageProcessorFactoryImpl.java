@@ -16,12 +16,14 @@ import com.asp.message.processor.TaskProcessor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.beans.factory.BeanFactory;
 
 @Component
 public class MessageProcessorFactoryImpl implements MessageProcessorFactory {
 	private static final Logger LOGGER = Logger.getLogger(MessageProcessorFactoryImpl.class);
 
 	private Map<String, String> taskProcessorMap = new HashMap<>();
+	public static BeanFactory CONTEXT;
 
 	@PostConstruct
 	public void initProperties() throws IOException {
@@ -64,7 +66,7 @@ public class MessageProcessorFactoryImpl implements MessageProcessorFactory {
 		}
 		
 		try {
-			return StaticContextHolder.getBean(beanName, TaskProcessor.class);
+			return CONTEXT.getBean(beanName, TaskProcessor.class);
 		} catch(Exception ex) {
 			String msg = String.format("Unable to get the Spring "
 					+ "TaskProcessor bean with the name: '%s'", beanName);

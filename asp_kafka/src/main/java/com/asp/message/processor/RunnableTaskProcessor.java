@@ -1,8 +1,6 @@
 package com.asp.message.processor;
 
 
-import com.asp.common.AppExecContext;
-import com.asp.common.ContextBuilder;
 import com.asp.common.Message;
 
 public class RunnableTaskProcessor implements Runnable{
@@ -10,8 +8,6 @@ public class RunnableTaskProcessor implements Runnable{
 
 	protected Message message;
 
-	
-	private ContextBuilder contextBuilder;
 	
 	public RunnableTaskProcessor(TaskProcessor task, Message message) {
 		this.processor = task;
@@ -21,8 +17,8 @@ public class RunnableTaskProcessor implements Runnable{
 	@Override
 	public void run() {
 		 
-		AppExecContext context =null;
-		processor.execute(message, context);
+		
+		processor.execute(message);
 		
 	}
 

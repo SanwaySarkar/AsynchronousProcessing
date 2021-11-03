@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.asp.common.AppExecContext;
 import com.asp.common.Message;
 import com.asp.common.redis.MetaDataImpl;
 import com.asp.common.redis.Metadata;
@@ -47,7 +46,7 @@ public class Processor2 implements TaskProcessor{
 		
 	}
 	@Override
-	public void execute(Message message,AppExecContext context) {
+	public void execute(Message message) {
 		// TODO Auto-generated method stub
 		JsonObject jsonObject = new JsonParser().parse(message.getParamsJson()).getAsJsonObject();
 		Metadata metadata = new Metadata(id++,message.getUserName(),message.getGroupCode(),message.getMessageType());
